@@ -9,7 +9,8 @@
 #include "src/paddle.h"
 #include "src/utilities.h"
 
-bool players_only_right = true;
+// human players are given only right paddles
+bool players_only_on_right = true;
 
 // Screen resolution.
 const int Pong::SCREEN_WIDTH = 1920;
@@ -715,7 +716,7 @@ void Pong::render() {
 
 Paddle* Pong::add_client(std::shared_ptr<Client> client)
 {
-    if (left_clients.size() < right_clients.size() && !players_only_right) {
+    if (left_clients.size() < right_clients.size() && !players_only_on_right) {
         left_clients.emplace_back(client);
         if (left_paddles.size() < left_clients.size()) {
             left_paddles.emplace_back(

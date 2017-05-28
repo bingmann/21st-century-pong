@@ -59,9 +59,18 @@ Set up your Wifi using the Default ROM:
 + use another computer or smartphone to connect to the wifi AP opened by the badge -- `ESPxxxx` with given password
 + set wifi details via webpage
 
-Set up your Pong Server to be `x.x.x.42` in the same (wifi) network.
+IMPORTANT: Set up your Pong Server to be `x.x.x.42` in the same (wifi) network.
 The badges connect to `x.x.x.42:1234`.
 You can change `.42` in the ROM code.
+
+**Repeat** steps with more badges for **multiplayer** Pong against the AI.
+
+To play against each other, change the [boolean players_only_on_right](https://github.com/bingmann/gpn17-pong-invaders/blob/master/src/pong.cc#L13) in the Pong server code.
+
+## Known Bugs
+
++ Ball collision with paddles does not alway work :)
++ Paddles remain zombies when GPN badges are turned off, because the TCP connection is not closed.
 
 ## License and Credits
 
