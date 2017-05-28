@@ -17,6 +17,8 @@ You will need:
 + [SDL TTF 2.0](https://www.libsdl.org/projects/SDL_ttf/)
 + [Boost.Asio](http://www.boost.org)
 
+IMPORTANT: your Pong server MUST at `x.x.x.42` in the Wifi network for the controllers to find it!
+
 ### Ubuntu
 
 Install all dependencies on Ubuntu 14.04 and above:
@@ -42,6 +44,24 @@ make
 To run the game:
 
 `./pong`
+
+Have fun watching an AI battle!
+
+IMPORTANT: your Pong server MUST at `x.x.x.42` in the Wifi network for the controllers to find it!
+
+## Flash the GPN'17 Badge
+
+Flash the controller onto your GPN'17 Badge using the [Gulash ROM-Store](https://badge.entropia.de/roms/details/34/)
+
+Set up your Wifi using the Default ROM:
++ select "Configuration"
++ select "WiFi Config"
++ use another computer or smartphone to connect to the wifi AP opened by the badge -- `ESPxxxx` with given password
++ set wifi details via webpage
+
+Set up your Pong Server to be `x.x.x.42` in the same (wifi) network.
+The badges connect to `x.x.x.42:1234`.
+You can change `.42` in the ROM code.
 
 ## License and Credits
 
