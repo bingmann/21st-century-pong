@@ -5,10 +5,10 @@ OBJS            := $(SRCS:.cc=.o)
 DEBUG           := -g
 
 SDL_INCLUDE     := `sdl2-config --cflags`
-SDL_LIB         := `sdl2-config --libs` -lSDL2_ttf -lSDL2_mixer
+SDL_LIB         := `sdl2-config --libs` -lSDL2_ttf -lboost_system -lpthread
 
 CPPFLAGS        += $(SDL_INCLUDE) -I.
-CXXFLAGS        += $(DEBUG) -Wall -std=c++11
+CXXFLAGS        += $(DEBUG) -Wall -std=c++11 -O3 -g
 LDFLAGS         += $(SDL_LIB)
 
 .PHONY: all clean

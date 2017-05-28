@@ -3,41 +3,38 @@
 #ifndef SRC_PONG_H_
 #define SRC_PONG_H_
 
-#include <SDL2/SDL.h>                       // SDL library.
-#include <SDL2/SDL_ttf.h>                   // SDL font library.
-#include <SDL2/SDL_mixer.h>                 // SDL sound library.
+#include <SDL2/SDL.h>       // SDL library.
+#include <SDL2/SDL_ttf.h>   // SDL font library.
 
+#include <boost/asio.hpp>
+
+#include <deque>
+#include <iostream>
 #include <string>
+#include <vector>
+
+namespace asio = boost::asio;
+using boost::asio::ip::tcp;
 
 class Ball;
 class Paddle;
 
 class Pong {
- private:
+private:
     // Window and renderer.
-    SDL_Window* window;  // Holds window properties.
-    SDL_Renderer* renderer;  // Holds rendering surface properties.
+    SDL_Window* window;     // Holds window properties.
+    SDL_Renderer* renderer; // Holds rendering surface properties.
 
     // Game objects.
     Ball* ball;
-    Paddle* left_paddle;
-    Paddle* right_paddle;
-
-    // Sounds.
-    // Holds sound produced after ball collides with paddle.
-    Mix_Chunk* paddle_sound;
-
-    // Holds sound produced after ball collides with wall.
-    Mix_Chunk* wall_sound;
-
-    // Holds sound produced when updating score.
-    Mix_Chunk* score_sound;
+    std::vector<Paddle*> left_paddles;
+    std::vector<Paddle*> right_paddles;
 
     // Controllers.
     enum Controllers { mouse, keyboard, joystick };
     Controllers controller;
-    SDL_Joystick *gamepad;  // Holds joystick information.
-    int gamepad_direction;  // gamepad direction.
+    SDL_Joystick* gamepad; // Holds joystick information.
+    int gamepad_direction; // gamepad direction.
     int mouse_x, mouse_y;  // Mouse coordinates.
 
     // Fonts.
@@ -74,19 +71,108 @@ class Pong {
     bool right_score_changed;
 
     // Game status.
-    bool exit;  // True when player wants to exit game.
+    bool exit; // True when player wants to exit game.
 
- public:
+    /**************************************************************************/
+    // Network
+
+    struct ClientMessage {
+        float x;
+        float y;
+        uint8_t joy;
+    } __attribute__((packed));
+
+    struct ClientStatus {
+        uint16_t points;
+    };
+
+    class Client : public std::enable_shared_from_this<Client> {
+    public:
+        Client(tcp::socket socket, Pong& pong);
+
+        void start();
+        void deliver(const ClientStatus& msg);
+
+    private:
+        void do_read();
+        void do_write();
+
+        tcp::socket socket_;
+        Pong& pong_;
+        ClientMessage read_msg_;
+        std::deque<ClientStatus> write_msgs_;
+        Paddle* paddle_;
+    };
+
+    class Server {
+    public:
+        Server(asio::io_service& io_service, const tcp::endpoint& endpoint,
+               Pong& pong);
+
+    private:
+        void do_accept();
+
+        tcp::acceptor acceptor_;
+        tcp::socket socket_;
+        Pong& pong_;
+    };
+
+    asio::io_service io_service_;
+
+    Server pong_server_{
+        io_service_, tcp::endpoint(tcp::v4(), /* port */ 1234), *this};
+
+    std::vector<std::shared_ptr<Client> > left_clients;
+    std::vector<std::shared_ptr<Client> > right_clients;
+
+    /**************************************************************************/
+
+    enum class FlutObject {
+        LeftPaddle, RightPaddle, Ball, LeftInvaders, RightInvaders
+    };
+
+    class FlutClient {
+    public:
+        FlutClient(asio::io_service& io_service, Pong& pong,
+                   FlutObject object);
+
+        void render();
+
+    private:
+        void on_timer();
+        void do_resolve();
+        void do_read();
+
+    private:
+        asio::io_service& io_service_;
+        bool connected_ = false;
+        asio::deadline_timer timer_{io_service_, boost::posix_time::seconds(1)};
+        asio::ip::tcp::resolver resolver_;
+        tcp::socket socket_;
+        boost::asio::streambuf read_data_;
+        Pong& pong_;
+        FlutObject object_;
+
+        // big buffer to write pixel flut
+        char buffer_[1024000];
+    };
+
+    std::vector<FlutClient*> flut_clients_;
+
+public:
     // Screen resolution.
     static const int SCREEN_WIDTH;
     static const int SCREEN_HEIGHT;
 
-    Pong(int argc, char *argv[]);
+    Pong(int argc, char* argv[]);
     ~Pong();
     void execute();
     void input();
     void update();
     void render();
+
+    Paddle* add_client(std::shared_ptr<Client> client);
+    void remove_client(std::shared_ptr<Client> client, Paddle* paddle);
 };
 
-#endif  // SRC_PONG_H_
+#endif // SRC_PONG_H_

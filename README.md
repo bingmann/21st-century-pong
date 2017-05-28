@@ -1,35 +1,39 @@
-Pong clone
+GPN17 Pong Invaders for GPN Badge
 =============
 
-Pong clone written in C++ with SDL 2.0.
+Pong Invaders is a client/server multiplayer Pong game.
+You use your [GPN Badge](https://entropia.de/GPN17:Hack_the_Badge) to control the paddles and play co-op multi-player against an almost perfect AI.
 
-![Screenshot](https://cloud.githubusercontent.com/assets/1498164/5608125/295a3186-9481-11e4-968b-04987a925a93.png)
+Derived from a Pong clone written in C++ with SDL 2.0.
+Fixed game physics for larger screens, added multiplayer network with Boost.Asio, injected creepy space invaders, optionally enable PixelFlut, and made a gazillion of small changes at the [17. Gulaschprogrammiernacht GPN'17](https://entropia.de/GPN17).
+
+![Screenshot](screenshot.png)
 
 ## Dependencies
 
 You will need:
 
 + [SDL 2.0](https://www.libsdl.org/)
-+ [SDL Mixer 2.0](http://www.libsdl.org/projects/SDL_mixer/)
 + [SDL TTF 2.0](https://www.libsdl.org/projects/SDL_ttf/)
++ [Boost.Asio](http://www.boost.org)
 
 ### Ubuntu
 
 Install all dependencies on Ubuntu 14.04 and above:
 
-`sudo apt-get install libsdl2-dev libsdl2-mixer-dev libsdl2-ttf-dev`
+`sudo apt-get install libsdl2-dev libsdl2-ttf-dev libboost-all-dev`
 
 ### Mac OS X
 
 Install the required build dependencies using [Homebrew](http://brew.sh/):
 
-`brew install sdl2 sdl2_mixer sdl2_ttf`
+`brew install sdl2 sdl2_ttf boost`
 
 ## Get Source and Build
 
 ```
-git clone https://github.com/chaficnajjar/pong.git
-cd pong
+git clone https://github.com/bingmann/gpn17-pong-invaders
+cd gpn17-pong-invaders
 make
 ```
 
@@ -38,14 +42,6 @@ make
 To run the game:
 
 `./pong`
-
-To run the game with joystick support:
-
-`./pong joystick`
-
-## Contribute
-
-If you would like to contribute, please make sure you follow the [Google C++ Style Guide](http://google-styleguide.googlecode.com/svn/trunk/cppguide.html).
 
 ## License and Credits
 
@@ -74,6 +70,8 @@ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
-Created by [Chafic Najjar](https://github.com/chaficnajjar).
+Original Pong Created by [Chafic Najjar](https://github.com/chaficnajjar).
 
 NES Chimera Font by [Brian Kramer](https://www.pkeod.com/).
+
+Network stuff and GPN-Badge code by [TimoB](https://github.com/bingmann/).
