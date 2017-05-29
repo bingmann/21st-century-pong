@@ -17,8 +17,6 @@ You will need:
 + [SDL TTF 2.0](https://www.libsdl.org/projects/SDL_ttf/)
 + [Boost.Asio](http://www.boost.org)
 
-IMPORTANT: your Pong server MUST at `x.x.x.42` in the Wifi network for the controllers to find it!
-
 ### Ubuntu
 
 Install all dependencies on Ubuntu 14.04 and above:
@@ -46,8 +44,6 @@ To run the game:
 `./pong`
 
 Have fun watching an AI battle!
-
-IMPORTANT: your Pong server MUST at `x.x.x.42` in the Wifi network for the controllers to find it!
 
 ## Flash the GPN'17 Badge
 
